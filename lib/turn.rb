@@ -31,7 +31,6 @@ class Turn
       elsif @player1.deck.cards[2].rank < @player2.deck.cards[2].rank
         @player2
       else
-
        "No Winner"
      end
   end
@@ -45,7 +44,7 @@ class Turn
         @spoils_of_war << @player1.deck.cards.shift
         @spoils_of_war << @player2.deck.cards.shift
       end
-    else
+    else type == :mutually_assured_destruction
       3.times do
         @player1.deck.cards.shift
         @player2.deck.cards.shift
@@ -55,8 +54,11 @@ class Turn
 
   def award_spoils(winner)
     if winner.is_a?(Player)
+    # p @spoils_of_war.count
     winner.deck.cards << @spoils_of_war
+    # p winner.deck.cards.count
     winner.deck.cards.flatten!
+    # p winner.deck.cards.count
     else
     end
   end

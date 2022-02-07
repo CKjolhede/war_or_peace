@@ -74,11 +74,11 @@ RSpec.describe Turn do
       expect(@turn.type).to eq(:war)
     end
 
-    it '#winner returns accurately for basic turn' do
+    it '#winner returns accurately for war turn' do
       expect(winner = @turn.winner).to eq(@player2)
     end
 
-    it '#pile_cards for basic turn' do
+    it '#pile_cards for war turn' do
       @turn.pile_cards
       expect(@turn.spoils_of_war).to eq([@card1, @card4, @card2, @card3, @card5, @card6])
     end
@@ -119,11 +119,11 @@ RSpec.describe Turn do
       expect(@turn.type).to eq(:mutually_assured_destruction)
     end
 
-    it '#winner returns accurately for basic turn' do
+    it '#winner returns accurately for MAD turn' do
       expect(winner = @turn.winner).to eq("No Winner")
     end
 
-    it '#pile_cards shovels cards into spoils_of_war' do
+    it '#pile_cards does not shovel cards into spoils_of_war' do
       @turn.pile_cards
       expect(@turn.spoils_of_war).to eq([])
     end

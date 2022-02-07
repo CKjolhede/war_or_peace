@@ -1,5 +1,6 @@
 require './lib/card'
 require './lib/deck'
+# require './war_and_peace_runner'
 require 'pry'
 
 class Player
@@ -11,6 +12,13 @@ class Player
   end
 
   def has_lost?
-    @deck.cards.count == 0
+    # deck.cards.count == 0
+    if @deck.cards.count == 0
+      true
+    elsif @deck.cards.count < 2 && @turn_count != nil
+      true
+    else
+      false
+    end
   end
 end

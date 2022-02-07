@@ -14,7 +14,7 @@ class Game
     @player1 = Player.new("Megan", deck_1)
     @player2 = Player.new("Aurora", deck_2)
     @turn_count = 0
-    @winner = nil
+    # @winner = nil
   end
 
   def make_cards
@@ -40,9 +40,8 @@ class Game
     puts "Welcome to War! (or Peace) This game will be played with #{@cards_array.count} cards. \n
     The players today are #{player1.name} and #{player2.name}. \n
     Type 'GO' to start the game!"
-    input = gets.chomp.downcase
-    if input == 'go'
-      # while (player_win? == false) && @player1.deck.cards.count > 2 && @player2.deck.cards.count > 2
+    @input = gets.chomp.downcase
+    if @input == 'go'
       while @player1.deck.cards.count > 2 && @player2.deck.cards.count > 2
         take_turn
       end
@@ -50,39 +49,75 @@ class Game
       p "unrecognized input '#{input}'/n  Please enter 'GO' to play"
       start
     end
-    p "*~*~*~* #{winner.name} has won the game! *~*~*~*"
+    player_win?
+    p "*~*~*~* #{@game_winner.name} has won the game! *~*~*~*"
   end
 
   def player_win?
-    @player1.has_lost? || @player2.has_lost?
+    @player1.has_lost? | @game_winner=@player2
+    @player2.has_lost? | @game_winner=@player1
   end
 
   def take_turn
     @turn_count += 1
     if @turn_count <= 1000000
       turn = Turn.new(player1, player2)
-
-      turn.pile_cards
-      @winner = turn.winner
-      turn.award_spoils(@winner)
-
+      # puts @player1.deck.cards[0].value
+      # puts @player2.deck.cards[0].value
+      # sleep 5
+      # alt_turn if @turn_count >= 1000 || @turn_count <= 10000
       case turn.type
       when :basic
-        p "Turn #{turn_count.to_s}: #{turn.winner.name} won 2 cards and now has #{turn.winner.deck.cards.count} cards"
+        p "#{@player1.name} played a #{@player1.deck.cards[0].value}"
+        p "#{@player2.name} played a #{@player2.deck.cards[0].value}"
+        p "Turn #{turn_count.to_s}: #{turn.winner.name} won 2 cards and now has #{turn.winner.deck.cards.count + 1} cards"
+        # sleep 1.0
 
       when :war
-        turn.winner.deck.cards.flatten!
-        p "Turn #{turn_count.to_s}: WAR! #{turn.winner.name} won 6 cards and now has #{turn.winner.deck.cards.count} cards"
+        p "#{@player1.name} played a #{@player1.deck.cards[0].value}"
+        p "#{@player2.name} played a #{@player2.deck.cards[0].value}"
+        # sleep 1
+        p "Turn #{turn_count.to_s}: WAR!"
+        # sleep 1
+        p "#{@player1.name} played a #{@player1.deck.cards[2].value}"
+        p "#{@player2.name} played a #{@player2.deck.cards[2].value}"
+        p "#{turn.winner.name} won 6 cards and now has #{turn.winner.deck.cards.count + 3} cards"
+        # sleep 2
 
       when :mutually_assured_destruction
-        p "Turn #{turn_count.to_s}: *Mutually Assured Destruction* 6 cards removed from play"
-
+        p "#{@player1.name} played a #{@player1.deck.cards[0].value}"
+        p "#{@player2.name} played a #{@player2.deck.cards[0].value}"
+        # sleep 1
+        p "Turn #{turn_count.to_s}: WAR!"
+        # sleep 1
+        p "#{@player1.name} played a #{@player1.deck.cards[2].value}"
+        p "#{@player2.name} played a #{@player2.deck.cards[2].value}"
+        p "Turn #{turn_count.to_s}: *!@!* Mutually Assured Destruction *!@!* 6 cards removed from play. #{@player1.deck.cards.count + @player2.deck.cards.count - 6} cards remain in play."
       end
+      @winner = turn.winner
+      turn.pile_cards
+      turn.award_spoils(@winner)
+
     else
       p "Just as in real life, War has no winners."
       p "----------THE GAME IS A DRAW ------------"
+      p "A strange game. The only winning move is not to play - Joshua"
+      exit
     end
   end
+
 end
 
 Game.new.start
+
+
+
+# def alt_turn
+#   puts 'cls'
+#   puts "      WARNING: YOUR CAR WARRANTY IS AB0UT TO EXPIRE
+#     "
+#   puts "Call us, we can help you renew your warranty before those major repairs start rolling in"
+#   puts "advertisement"
+#   @winner = turn.winner
+#   turn.pile_cards
+#   turn.award_spoils(@winner)
