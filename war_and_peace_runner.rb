@@ -42,7 +42,8 @@ class Game
     Type 'GO' to start the game!"
     input = gets.chomp.downcase
     if input == 'go'
-      while player_win? == false
+      # while (player_win? == false) && @player1.deck.cards.count > 2 && @player2.deck.cards.count > 2
+      while @player1.deck.cards.count > 2 && @player2.deck.cards.count > 2
         take_turn
       end
     elsif
@@ -61,20 +62,22 @@ class Game
     if @turn_count <= 1000000
       turn = Turn.new(player1, player2)
 
+      turn.pile_cards
+      @winner = turn.winner
+      turn.award_spoils(@winner)
+
       case turn.type
       when :basic
         p "Turn #{turn_count.to_s}: #{turn.winner.name} won 2 cards and now has #{turn.winner.deck.cards.count} cards"
 
       when :war
+        turn.winner.deck.cards.flatten!
         p "Turn #{turn_count.to_s}: WAR! #{turn.winner.name} won 6 cards and now has #{turn.winner.deck.cards.count} cards"
 
       when :mutually_assured_destruction
         p "Turn #{turn_count.to_s}: *Mutually Assured Destruction* 6 cards removed from play"
 
       end
-      turn.pile_cards
-      @winner = turn.winner
-      turn.award_spoils(@winner)
     else
       p "Just as in real life, War has no winners."
       p "----------THE GAME IS A DRAW ------------"
