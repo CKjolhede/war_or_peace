@@ -2,7 +2,7 @@ require './lib/card'
 require './lib/deck'
 require './lib/player'
 require './lib/turn'
-require 'pry'
+
 
 class Game
   attr_reader :player1, :player2, :cards, :turn_count, :winner
@@ -19,20 +19,25 @@ class Game
 
   def make_cards
     suits = [:spade, :club, :heart, :diamond]
-    cards_array = []
+    @cards_array = []
     suits.each do |suit|
-      values = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
-      value_rank_pairs = values.zip((1..14).to_a)
+      values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
+      value_rank_pairs = values.zip((2..14).to_a)
       value_rank_pairs.each do |pairs|
         card = Card.new(suit, pairs[0], pairs[1])
-        cards_array << card
+        @cards_array << card
       end
     end
-    cards_array.shuffle
+    # this verifies complete deck created accurately
+    # puts cards_array.count
+    # cards_array.each do |card|
+    #   p card
+    # end
+    @cards_array.shuffle
   end
 
   def start
-    puts "Welcome to War! (or Peace) This game will be played with 52 cards. \n
+    puts "Welcome to War! (or Peace) This game will be played with #{@cards_array.count} cards. \n
     The players today are #{player1.name} and #{player2.name}. \n
     Type 'GO' to start the game!"
     input = gets.chomp.downcase
@@ -58,15 +63,18 @@ class Game
 
       case turn.type
       when :basic
-        p "Turn #{turn_count.to_s}: #{turn.winner.name} won 2 cards"
+        p "Turn #{turn_count.to_s}: #{turn.winner.name} won 2 cards and now has #{turn.winner.deck.cards.count} cards"
+
       when :war
-        p "Turn #{turn_count.to_s}: WAR! #{turn.winner.name} won 6 cards"
+        p "Turn #{turn_count.to_s}: WAR! #{turn.winner.name} won 6 cards and now has #{turn.winner.deck.cards.count} cards"
+
       when :mutually_assured_destruction
         p "Turn #{turn_count.to_s}: *Mutually Assured Destruction* 6 cards removed from play"
+
       end
       turn.pile_cards
       @winner = turn.winner
-      turn.award_spoils(@winner) 
+      turn.award_spoils(@winner)
     else
       p "Just as in real life, War has no winners."
       p "----------THE GAME IS A DRAW ------------"

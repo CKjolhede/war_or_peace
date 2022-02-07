@@ -31,7 +31,7 @@ class Turn
       elsif @player1.deck.cards[2].rank < @player2.deck.cards[2].rank
         @player2
       else
-        "No Winner"
+       "No Winner"
      end
   end
 
@@ -53,7 +53,7 @@ class Turn
   end
 
   def award_spoils(winner)
-    winner.deck.cards << @spoils_of_war if @winner.is_a?(Player)
-    winner.deck.cards.flatten! if @winner.is_a?(Player)
+    winner.deck.cards << @spoils_of_war
+    winner.deck.cards.flatten!
   end
 end
